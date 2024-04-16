@@ -1,3 +1,17 @@
+## Before usage run these lines in the terminal:
+1. php artisan filament:install --panels
+2. php artisan migrate
+3. php artisan make:filament-user
+    - email: admin@steunpunt-friesland.nl
+    - password: admin
+4. php artisan serve
+5. Go to (http://127.0.0.1:8000/admin/login)
+6. Login using the credentials:
+    - email: admin@steunpunt-friesland.nl
+    - password: admin
+
+<hr>
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
