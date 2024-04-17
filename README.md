@@ -1,5 +1,13 @@
 ## Before usage run these lines in the terminal:
-1. php artisan filament:install --panels
+1. Pull latest version
+2. php artisan serve
+3. Hopefully it works
+4. Go to (http://127.0.0.1:8000/admin/login)
+5. Login using the credentials:
+    - email: admin@steunpunt-friesland.nl
+    - password: admin
+
+<!-- 1. php artisan filament:install --panels
 2. php artisan migrate
 3. php artisan make:filament-user
     - email: admin@steunpunt-friesland.nl
@@ -8,7 +16,7 @@
 5. Go to (http://127.0.0.1:8000/admin/login)
 6. Login using the credentials:
     - email: admin@steunpunt-friesland.nl
-    - password: admin
+    - password: admin -->
 
 <hr>
 
