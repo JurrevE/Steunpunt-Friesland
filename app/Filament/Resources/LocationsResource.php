@@ -44,12 +44,19 @@ class LocationsResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('name'),
+            Tables\Columns\TextColumn::make('name')
+            ->sortable()
+            ->searchable(isIndividual: true),
             Tables\Columns\TextColumn::make('location')
-            ->icon('heroicon-s-map-pin'),
+            ->icon('heroicon-s-map-pin')
+            ->sortable()
+            ->searchable(isIndividual: true),
             // Checkbox
-            Tables\Columns\CheckboxColumn::make('under_15'),
+            Tables\Columns\CheckboxColumn::make('under_15')
+            ->sortable(),
+            // Gathering all the sector names(table sectors, column sector_name)
             Tables\Columns\TextColumn::make('sectors.sector_name')
+            ->searchable()
             ->badge()
             ->limitList(3)
             ->expandableLimitedList()
