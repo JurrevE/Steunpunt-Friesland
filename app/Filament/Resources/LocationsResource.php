@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use FIlament\Tables\Colums\CheckboxColumn;
+use Filament\Forms\Components\CheckboxList;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -23,11 +24,19 @@ class LocationsResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            // Define your form fields here based on your locations table columns
-            Forms\Components\TextInput::make('name'),
-            Forms\Components\TextInput::make('location'),
-            // Check box
-            // Forms\Components\CheckboxColumn::make('under_15'),
+            Forms\Components\TextInput::make('name')
+                ->required()
+                ->label('Name'),
+            Forms\Components\TextInput::make('location')
+                ->required()
+                ->label('Location'),
+            Forms\Components\Checkbox::make('under_15')
+                ->label('Under 15')
+                ->helperText('Check if the location is suitable for ages under 15.'),
+            CheckboxList::make('sectors')
+                ->relationship('sectors', 'sector_name')
+                ->label('Sectors')
+                ->helperText('Select the sectors this location belongs to.'),
         ]);
     }
 
@@ -36,9 +45,14 @@ class LocationsResource extends Resource
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('name'),
-            Tables\Columns\TextColumn::make('location'),
+            Tables\Columns\TextColumn::make('location')
+            ->icon('heroicon-s-map-pin'),
             // Checkbox
             Tables\Columns\CheckboxColumn::make('under_15'),
+            Tables\Columns\TextColumn::make('sectors.sector_name')
+            ->badge()
+            ->limitList(3)
+            ->expandableLimitedList()
         ])->filters([
             //
         ])
