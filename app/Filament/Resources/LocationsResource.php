@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FIlament\Tables\Colums\CheckboxColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -24,6 +25,9 @@ class LocationsResource extends Resource
         return $form->schema([
             // Define your form fields here based on your locations table columns
             Forms\Components\TextInput::make('name'),
+            Forms\Components\TextInput::make('location'),
+            // Check box
+            // Forms\Components\CheckboxColumn::make('under_15'),
         ]);
     }
 
@@ -32,6 +36,9 @@ class LocationsResource extends Resource
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('name'),
+            Tables\Columns\TextColumn::make('location'),
+            // Checkbox
+            Tables\Columns\CheckboxColumn::make('under_15'),
         ])->filters([
             //
         ])
