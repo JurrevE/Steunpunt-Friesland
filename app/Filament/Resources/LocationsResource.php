@@ -58,8 +58,9 @@ class LocationsResource extends Resource
             Tables\Columns\TextColumn::make('sectors.sector_name')
             ->searchable()
             ->badge()
-            ->limitList(3)
+            ->limitList(2)
             ->expandableLimitedList()
+            ->listWithLineBreaks()
         ])->filters([
             //
         ])
