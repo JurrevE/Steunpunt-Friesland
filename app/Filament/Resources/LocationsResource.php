@@ -14,12 +14,15 @@ use FIlament\Tables\Colums\CheckboxColumn;
 use Filament\Forms\Components\CheckboxList;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\ViewAction;
 
 class LocationsResource extends Resource
 {
     protected static ?string $model = Locations::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+    
+    protected static ?string $navigationGroup = 'Sectors'; //Place the corresponding navigation group here
 
     public static function form(Form $form): Form
     {
@@ -66,6 +69,7 @@ class LocationsResource extends Resource
         ])
         ->actions([
             Tables\Actions\EditAction::make(),
+            ViewAction::make()
         ])
         ->bulkActions([
             Tables\Actions\BulkActionGroup::make([

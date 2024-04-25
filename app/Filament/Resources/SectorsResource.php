@@ -18,6 +18,9 @@ class SectorsResource extends Resource
     protected static ?string $model = Sectors::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-pie';
+    
+    protected static ?string $navigationGroup = 'Sectors';
+
 
     public static function form(Form $form): Form
     {
