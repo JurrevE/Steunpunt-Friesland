@@ -16,13 +16,13 @@ class StatsOverview extends BaseWidget
     {
         $locationCount = Locations::count();
         $sectorCount = Sector::count();
-        //$TeacherCount = Teacher::count(); use this when we are ready for this step
+        //$teacherCount = Teacher::count(); use this when we are ready for this step
 
 
         return [
             Stat::make('Locations', $locationCount),            
             Stat::make('Sectors', $sectorCount),
-            Stat::make('Teachers', '3:12'),        
+            Stat::make('Available Teachers', '3:12'),        
         ];
     }
 }

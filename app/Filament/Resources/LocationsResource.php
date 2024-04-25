@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LocationsResource\Pages;
 use App\Filament\Resources\LocationsResource\RelationManagers;
 use App\Models\Locations;
+use Doctrine\DBAL\Schema\Schema;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,6 +16,10 @@ use Filament\Forms\Components\CheckboxList;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Infolist;
+use Filament\Infolists\Components\Section;
 
 class LocationsResource extends Resource
 {
@@ -76,6 +81,28 @@ class LocationsResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]),
         ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('name'),
+                TextEntry::make('location')
+                ->icon('heroicon-s-map-pin')
+                ->label('Location'),
+                Section::Make('Sectors')
+                ->description('All suitable sectors')
+                ->label('Sectors')
+                ->collapsible()
+                    ->schema([
+                        TextEntry::make('sectors.sector_name')
+                        ->badge()
+                        ->hiddenLabel(),
+                    ])
+                 
+            ])
+            ->columns(2);
     }
 
     public static function getRelations(): array
