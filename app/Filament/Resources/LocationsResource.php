@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LocationsResource\Pages;
 use App\Filament\Resources\LocationsResource\RelationManagers;
 use App\Models\Locations;
+use Doctrine\DBAL\Schema\Schema;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,12 +15,20 @@ use FIlament\Tables\Colums\CheckboxColumn;
 use Filament\Forms\Components\CheckboxList;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Infolist;
+use Filament\Infolists\Components\Section;
+use Filament\Tables\Columns\IconColumn;
 
 class LocationsResource extends Resource
 {
     protected static ?string $model = Locations::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+    
+    protected static ?string $navigationGroup = 'Sectors'; //Place the corresponding navigation group here
 
     public static function form(Form $form): Form
     {
@@ -52,7 +61,8 @@ class LocationsResource extends Resource
             ->sortable()
             ->searchable(isIndividual: true),
             // Checkbox
-            Tables\Columns\CheckboxColumn::make('under_15')
+            Tables\Columns\IconColumn::make('under_15')
+            ->boolean()
             ->sortable(),
             // Gathering all the sector names(table sectors, column sector_name)
             Tables\Columns\TextColumn::make('sectors.sector_name')
@@ -66,12 +76,35 @@ class LocationsResource extends Resource
         ])
         ->actions([
             Tables\Actions\EditAction::make(),
+            ViewAction::make()
         ])
         ->bulkActions([
             Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),
             ]),
         ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('name'),
+                TextEntry::make('location')
+                ->icon('heroicon-s-map-pin')
+                ->label('Location'),
+                Section::Make('Sectors')
+                ->description('All suitable sectors')
+                ->label('Sectors')
+                ->collapsible()
+                    ->schema([
+                        TextEntry::make('sectors.sector_name')
+                        ->badge()
+                        ->hiddenLabel(),
+                    ])
+                 
+            ])
+            ->columns(2);
     }
 
     public static function getRelations(): array
