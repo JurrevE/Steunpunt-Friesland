@@ -7,6 +7,7 @@ use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 
 class LastUpdated extends BaseWidget
 {
@@ -22,7 +23,8 @@ class LastUpdated extends BaseWidget
                     ->label('Location Name'),
                 TextColumn::make('location')
                     ->label('Location'),
-                CheckboxColumn::make('under_15')
+                IconColumn::make('under_15')
+                    ->boolean()
                     ->label('Under 15')
             ]);
     }

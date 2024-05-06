@@ -20,6 +20,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\Section;
+use Filament\Tables\Columns\IconColumn;
 
 class LocationsResource extends Resource
 {
@@ -60,7 +61,8 @@ class LocationsResource extends Resource
             ->sortable()
             ->searchable(isIndividual: true),
             // Checkbox
-            Tables\Columns\CheckboxColumn::make('under_15')
+            Tables\Columns\IconColumn::make('under_15')
+            ->boolean()
             ->sortable(),
             // Gathering all the sector names(table sectors, column sector_name)
             Tables\Columns\TextColumn::make('sectors.sector_name')
