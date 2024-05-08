@@ -6,6 +6,7 @@ use App\Filament\Resources\LocationsResource\Pages;
 use App\Filament\Resources\LocationsResource\RelationManagers;
 use App\Models\Locations;
 use Doctrine\DBAL\Schema\Schema;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -61,9 +62,9 @@ class LocationsResource extends Resource
             ->sortable()
             ->searchable(isIndividual: true),
             // Checkbox
-            Tables\Columns\IconColumn::make('under_15')
-            ->boolean()
-            ->sortable(),
+            IconColumn::make('under_15')
+                    ->boolean()
+                    ->label('Under 15'),
             // Gathering all the sector names(table sectors, column sector_name)
             Tables\Columns\TextColumn::make('sectors.sector_name')
             ->searchable()
@@ -89,10 +90,13 @@ class LocationsResource extends Resource
     {
         return $infolist
             ->schema([
+                
                 TextEntry::make('name'),
                 TextEntry::make('location')
                 ->icon('heroicon-s-map-pin')
                 ->label('Location'),
+                IconEntry::make('under_15')
+                ->boolean(),
                 Section::Make('Sectors')
                 ->description('All suitable sectors')
                 ->label('Sectors')
@@ -104,7 +108,7 @@ class LocationsResource extends Resource
                     ])
                  
             ])
-            ->columns(2);
+            ->columns(3);
     }
 
     public static function getRelations(): array
