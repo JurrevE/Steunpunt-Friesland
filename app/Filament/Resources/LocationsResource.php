@@ -53,7 +53,8 @@ class LocationsResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
+        return $table
+        ->columns([
             Tables\Columns\TextColumn::make('name')
             ->sortable()
             ->searchable(isIndividual: true),
