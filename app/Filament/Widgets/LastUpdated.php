@@ -13,6 +13,8 @@ class LastUpdated extends BaseWidget
 {
     protected static ?int $sort = 2;
 
+    protected int | string | array $columnSpan = 'full';
+
     public function table(Table $table): Table
     {
         return $table
@@ -25,7 +27,9 @@ class LastUpdated extends BaseWidget
                     ->label('Location'),
                 IconColumn::make('under_15')
                     ->boolean()
-                    ->label('Under 15')
+                    ->label('Under 15'),
+                TextColumn::make('updated_at')
+                    ->date()
             ]);
     }
 }
