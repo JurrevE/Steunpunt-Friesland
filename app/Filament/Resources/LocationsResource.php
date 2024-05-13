@@ -9,6 +9,9 @@ use Doctrine\DBAL\Schema\Schema;
 use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -73,9 +76,14 @@ class LocationsResource extends Resource
             ->limitList(2)
             ->expandableLimitedList()
             ->listWithLineBreaks()
-        ])->filters([
-            //
-        ])
+
+        ])  ->filters([
+            TernaryFilter::make('under_15')
+            ->label('Geschikt voor onder de 15')
+            ->placeholder('Alles')
+            ->trueLabel('Geschikt')
+            ->falseLabel('Niet geschikt')
+        ], layout: FiltersLayout::AboveContent)
         ->actions([
             Tables\Actions\EditAction::make(),
             ViewAction::make()

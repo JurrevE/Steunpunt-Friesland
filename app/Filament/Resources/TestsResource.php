@@ -7,6 +7,9 @@ use App\Filament\Resources\TestsResource\RelationManagers;
 use App\Models\Tests;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -38,7 +41,7 @@ class TestsResource extends Resource
                 Forms\Components\TextInput::make('location'),
                 Forms\Components\Checkbox::make('under_15')
                 ->label('Under 15')
-                ->helperText('Check if the location is suitable for ages under 15.'),
+                ->helperText('Is de locatie geschikt voor kinderen onder de 15.'),
             ]);
     }
 
@@ -57,11 +60,16 @@ class TestsResource extends Resource
                     ->label('Locatie'),
                 // Checkbox
                 IconColumn::make('under_15')
+                    ->label('Onder 15')
                     ->boolean(),
             ])
             ->filters([
-                //
-            ])
+                TernaryFilter::make('under_15')
+                ->label('Geschikt voor onder de 15')
+                ->placeholder('Alles')
+                ->trueLabel('Geschikt')
+                ->falseLabel('Niet geschikt')
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
                 ViewAction::make()
@@ -76,11 +84,11 @@ class TestsResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('Zorglocatie'),
-                TextEntry::make('Plaats')
+                TextEntry::make('name'),
+                TextEntry::make('location')
                 ->icon('heroicon-s-map-pin')
                 ->label('Location'),
-                TextEntry::make('mailadres')
+                TextEntry::make('contact')
                 ->icon('heroicon-m-envelope')
                 ->copyable()
                 ->copyMessage('Copied!')
