@@ -25,6 +25,7 @@ use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\Section;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Infolists\Components\Tabs;
+use Filament\Support\Enums\Alignment;
 
 class LocationsResource extends Resource
 {
@@ -69,7 +70,8 @@ class LocationsResource extends Resource
                 // Checkbox
                 IconColumn::make('under_15')
                     ->label('Onder 15')
-                    ->boolean(),
+                    ->boolean()
+                    ->alignment(Alignment::Center),
                     Tables\Columns\TextColumn::make('sectors.sector_name')
                     ->searchable()
                     ->label('Sectoren')
