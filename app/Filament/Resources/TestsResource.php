@@ -20,6 +20,7 @@ use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\Section;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Infolists\Components\Tabs;
 
 
 class TestsResource extends Resource
@@ -52,6 +53,7 @@ class TestsResource extends Resource
                     ->limit('24')
                     ->label('Naam'),
                 Tables\Columns\TextColumn::make('location')
+                    ->icon('heroicon-s-map-pin')
                     ->sortable()
                     ->searchable(isIndividual: true)
                     ->label('Locatie'),
@@ -63,8 +65,8 @@ class TestsResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                ViewAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -76,29 +78,37 @@ class TestsResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('Zorglocatie'),
-                TextEntry::make('Plaats')
-                ->icon('heroicon-s-map-pin')
-                ->label('Location'),
-                TextEntry::make('mailadres')
-                ->icon('heroicon-m-envelope')
-                ->copyable()
-                ->copyMessage('Copied!')
-                ->copyMessageDuration(1500),
-                IconEntry::make('under_15')
-                ->boolean(),
-                Section::Make('Sectors')
-                ->description('All suitable sectors')
-                ->label('Sectors')
-                ->collapsible()
-                    ->schema([
-                        TextEntry::make('sectors.sector_name')
-                        ->badge()
-                        ->hiddenLabel(),
+                Tabs::make('Tabs')
+                    ->tabs([
+                        Tabs\Tab::make('Dashboard')
+                            ->icon('heroicon-m-bars-3-center-left')
+                            ->schema([
+                                TextEntry::make('name'),
+                                IconEntry::make('under_15')
+                                    ->boolean(),
+                                TextEntry::make('website')
+                                    ->icon('heroicon-m-globe-alt'),
+                            ]),
+                        Tabs\Tab::make('Contact')
+                            ->icon('heroicon-m-envelope')
+                            ->schema([
+                                TextEntry::make('location')
+                                    ->icon('heroicon-s-map-pin')
+                                    ->label('Location'),
+                                TextEntry::make('spokesperson')
+                                    ->label('Spokesperson')
+                                    ->icon('heroicon-m-user'),
+                                TextEntry::make('contact')
+                                    ->icon('heroicon-m-envelope')
+                                    ->copyable()
+                                    ->copyMessage('Copied!')
+                                    ->copyMessageDuration(1500),
+                            ]),
                     ])
-                 
+                    ->activeTab(1)                
             ])
-            ->columns(3);
+            ->columns(1)
+            ->inlineLabel();
     }
 
     public static function getRelations(): array
