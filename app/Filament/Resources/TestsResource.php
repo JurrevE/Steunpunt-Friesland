@@ -2,20 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\LocationsResource\Pages;
-use App\Filament\Resources\LocationsResource\RelationManagers;
-use App\Models\Locations;
-use Doctrine\DBAL\Schema\Schema;
-use Filament\Actions\DeleteAction;
+use App\Filament\Resources\TestsResource\Pages;
+use App\Filament\Resources\TestsResource\RelationManagers;
+use App\Models\Tests;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use FIlament\Tables\Colums\CheckboxColumn;
-use Filament\Forms\Components\CheckboxList;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use FIlament\Tables\Colums\CheckboxColumn;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\IconEntry;
@@ -24,29 +22,24 @@ use Filament\Infolists\Components\Section;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Infolists\Components\Tabs;
 
-class LocationsResource extends Resource
-{
-    protected static ?string $model = Locations::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
-    
-    protected static ?string $navigationGroup = 'Sectors'; //Place the corresponding navigation group here
+class TestsResource extends Resource
+{
+    protected static ?string $model = Tests::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->label('Name'),
+                ->required()
+                ->label('Name'),
                 Forms\Components\TextInput::make('location'),
                 Forms\Components\Checkbox::make('under_15')
-                    ->label('Under 15')
-                    ->helperText('Check if the location is suitable for ages under 15.'),
-                CheckboxList::make('sectors')
-                    ->relationship('sectors', 'sector_name')
-                    ->label('Sectoren')
-                    ->helpertext('selecteer de bijbehorende sectoren'),
+                ->label('Under 15')
+                ->helperText('Check if the location is suitable for ages under 15.'),
             ]);
     }
 
@@ -67,8 +60,6 @@ class LocationsResource extends Resource
                 // Checkbox
                 IconColumn::make('under_15')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('sectors.sector_name')
-                    ->badge(),
             ])
             ->filters([
                 //
@@ -130,14 +121,9 @@ class LocationsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLocations::route('/'),
-            'create' => Pages\CreateLocations::route('/create'),
-            'edit' => Pages\EditLocations::route('/{record}/edit'),
+            'index' => Pages\ListTests::route('/'),
+            'create' => Pages\CreateTests::route('/create'),
+            'edit' => Pages\EditTests::route('/{record}/edit'),
         ];
-    }
-
-    public static function getModel(): string
-    {
-        return Locations::class;
     }
 }
