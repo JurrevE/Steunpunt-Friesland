@@ -32,10 +32,13 @@ class TestsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('Zorglocatie')
+                Forms\Components\TextInput::make('name')
                 ->required()
                 ->label('Name'),
-                Forms\Components\TextInput::make('Plaats')
+                Forms\Components\TextInput::make('location'),
+                Forms\Components\Checkbox::make('under_15')
+                ->label('Under 15')
+                ->helperText('Check if the location is suitable for ages under 15.'),
             ]);
     }
 
@@ -43,13 +46,18 @@ class TestsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('Zorglocatie')
-                ->sortable()
-                ->searchable(isIndividual: true),
-                Tables\Columns\TextColumn::make('Plaats')
-                ->sortable()
-                ->searchable(isIndividual: true),
-               
+                Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(isIndividual: true)
+                    ->limit('24')
+                    ->label('Naam'),
+                Tables\Columns\TextColumn::make('location')
+                    ->sortable()
+                    ->searchable(isIndividual: true)
+                    ->label('Locatie'),
+                // Checkbox
+                IconColumn::make('under_15')
+                    ->boolean(),
             ])
             ->filters([
                 //
@@ -77,8 +85,8 @@ class TestsResource extends Resource
                 ->copyable()
                 ->copyMessage('Copied!')
                 ->copyMessageDuration(1500),
-                // IconEntry::make('under_15')
-                // ->boolean(),
+                IconEntry::make('under_15')
+                ->boolean(),
                 Section::Make('Sectors')
                 ->description('All suitable sectors')
                 ->label('Sectors')
