@@ -7,6 +7,8 @@ use App\Filament\Resources\LocationsResource\RelationManagers;
 use App\Models\Locations;
 use Doctrine\DBAL\Schema\Schema;
 use Filament\Actions\DeleteAction;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -66,16 +68,26 @@ class LocationsResource extends Resource
                     ->label('Locatie'),
                 // Checkbox
                 IconColumn::make('under_15')
+                    ->label('Onder 15')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('sectors.sector_name')
-                    ->badge(),
+                    Tables\Columns\TextColumn::make('sectors.sector_name')
+                    ->searchable()
+                    ->label('Sectoren')
+                    ->badge()
+                    ->limitList(2)
+                    ->expandableLimitedList()
+                    ->listWithLineBreaks()
             ])
             ->filters([
-                //
-            ])
+                TernaryFilter::make('under_15')
+                ->label('Geschikt voor onder de 15')
+                ->placeholder('Alles')
+                ->trueLabel('Geschikt')
+                ->falseLabel('Niet geschikt')
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
