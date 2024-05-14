@@ -147,7 +147,7 @@ class LocationsResource extends Resource
             'index' => Pages\ListLocations::route('/'),
             'create' => Pages\CreateLocations::route('/create'),
             'edit' => Pages\EditLocations::route('/{record}/edit'),
-        ];
+            'view' => Pages\ViewLocation\ViewLocation::route('/{record}'),        ];
     }
 
     public static function getModel(): string
