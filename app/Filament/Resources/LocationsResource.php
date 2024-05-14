@@ -126,9 +126,19 @@ class LocationsResource extends Resource
                                     ->copyable()
                                     ->copyMessage('Copied!')
                                     ->copyMessageDuration(1500),
-                            ]),
+                                ]),
                     ])
-                    ->activeTab(1)                
+                    ->activeTab(1),
+                    
+                    Section::make('Sectoren')
+                        ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
+                        ->schema([
+                            TextEntry::make('sectors.sector_name')
+                            ->badge()    
+                            ->label('Sectoren'),
+                            TextEntry::make('expertise')
+                            ->label('Specialiteiten')
+                        ])              
             ])
             ->columns(1)
             ->inlineLabel();
@@ -147,7 +157,8 @@ class LocationsResource extends Resource
             'index' => Pages\ListLocations::route('/'),
             'create' => Pages\CreateLocations::route('/create'),
             'edit' => Pages\EditLocations::route('/{record}/edit'),
-            'view' => Pages\ViewLocation\ViewLocation::route('/{record}'),        ];
+            'view' => Pages\ViewLocation\ViewLocation::route('/{record}'),        
+        ];
     }
 
     public static function getModel(): string
