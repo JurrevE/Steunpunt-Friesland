@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\LocationsResource\Pages\ViewLocation;
+namespace App\Filament\Resources\LocationsResource\Pages;
 
 use App\Models\Location;
 use App\Filament\Resources\LocationsResource;

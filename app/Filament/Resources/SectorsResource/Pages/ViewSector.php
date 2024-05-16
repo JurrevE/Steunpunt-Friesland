@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Filament\Resources\SectorsResource\Pages\ViewSector;
+namespace app\Filament\Resources\SectorsResource\Pages;
 
 use App\Filament\Resources\SectorsResource;
 use App\Models\Sectors;

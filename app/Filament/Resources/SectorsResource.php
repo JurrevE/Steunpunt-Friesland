@@ -68,7 +68,7 @@ class SectorsResource extends Resource
             'index' => Pages\ListSectors::route('/'),
             'create' => Pages\CreateSectors::route('/create'),
             'edit' => Pages\EditSectors::route('/{record}/edit'),
-            'view' => Pages\ViewSector\ViewSector::route('/{record}')
+            'view' => Pages\ViewSector::route('/{record}')
         ];
     }
 }
