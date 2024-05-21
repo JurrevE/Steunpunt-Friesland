@@ -88,13 +88,12 @@ class LocationsResource extends Resource
                     ->placeholder('Alles')
                     ->trueLabel('Geschikt')
                     ->falseLabel('Niet geschikt'),
-                SelectFilter::make('sectors')
+                    SelectFilter::make('sectors')
                     ->multiple()
                     ->options(self::getSectorOptions())
                     ->attribute('sectors.sector_name')
                     ->selectablePlaceholder(true)
                     ->query(function ($query, array $data) {
-                        // Check if the data is not empty
                         if (!empty(array_filter($data))) {
                             $flatData = collect($data)->flatten()->all();
                             $query->whereHas('sectors', function ($q) use ($flatData) {
@@ -189,5 +188,10 @@ class LocationsResource extends Resource
     public static function getModel(): string
     {
         return Locations::class;
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 }
