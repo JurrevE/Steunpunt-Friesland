@@ -34,7 +34,7 @@ class LocationsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
     
-    protected static ?string $navigationGroup = 'Sectors'; //Place the corresponding navigation group here
+    protected static ?string $navigationGroup = 'View'; //Place the corresponding navigation group here
 
     public static function form(Form $form): Form
     {
@@ -79,7 +79,9 @@ class LocationsResource extends Resource
                     ->expandableLimitedList()
                     ->listWithLineBreaks()
             ])
-            ->searchOnBlur()          
+            ->persistSearchInSession()
+            ->persistColumnSearchesInSession()
+            ->searchOnBlur()           
             ->filters([
                 TernaryFilter::make('under_15')
                     ->label('Geschikt voor onder de 15')
@@ -102,8 +104,8 @@ class LocationsResource extends Resource
                     })
             ], 
             layout: FiltersLayout::AboveContent)
+            ->persistFiltersInSession()
             ->deferFilters()
-
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ]);

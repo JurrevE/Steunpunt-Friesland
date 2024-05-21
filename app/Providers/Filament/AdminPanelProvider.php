@@ -42,8 +42,10 @@ class AdminPanelProvider extends PanelProvider
                 //Widgets\FilamentInfoWidget::class,
             ])
             ->navigationGroups([
-                'Sectors',
-                'Admin'
+                NavigationGroup::make()
+                ->label('View'),
+                NavigationGroup::make()
+                ->label('Admin'),
                 //Add new navigation group here
             ])
             ->middleware([

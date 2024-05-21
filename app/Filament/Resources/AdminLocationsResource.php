@@ -36,6 +36,16 @@ class AdminLocationsResource extends Resource
     
     protected static ?string $navigationGroup = 'Admin'; //Place the corresponding navigation group here
 
+    public static function getLabel(): string
+    {
+        return 'Locations';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Edit Locations';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -79,6 +89,8 @@ class AdminLocationsResource extends Resource
                     ->expandableLimitedList()
                     ->listWithLineBreaks()
             ])
+            ->persistSearchInSession()
+            ->persistColumnSearchesInSession()
             ->searchOnBlur()          
             ->filters([
                 TernaryFilter::make('under_15')
@@ -102,13 +114,17 @@ class AdminLocationsResource extends Resource
                     })
             ], 
             layout: FiltersLayout::AboveContent)
+            ->persistFiltersInSession()
             ->deferFilters()
-
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
-            
     }
 
     /**
