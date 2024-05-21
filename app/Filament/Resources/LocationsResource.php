@@ -26,6 +26,7 @@ use Filament\Infolists\Components\Section;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
+use Filament\Tables\Filters\SelectFilter;
 
 class LocationsResource extends Resource
 {
@@ -73,7 +74,7 @@ class LocationsResource extends Resource
                     ->boolean()
                     ->alignment(Alignment::Center),
                     Tables\Columns\TextColumn::make('sectors.sector_name')
-                    ->searchable()
+                    ->searchable(isIndividual: true)
                     ->label('Sectoren')
                     ->badge()
                     ->limitList(2)
@@ -85,7 +86,25 @@ class LocationsResource extends Resource
                 ->label('Geschikt voor onder de 15')
                 ->placeholder('Alles')
                 ->trueLabel('Geschikt')
-                ->falseLabel('Niet geschikt')
+                ->falseLabel('Niet geschikt'),
+                SelectFilter::make('Sectoren')
+                ->multiple()
+                ->options([
+                    'Afbouw, hout en onderhoud: AH&O' => 'Afbouw, hout en onderhoud: AH&O',
+                    'Bouw en infra: B&I' => 'Bouw en infra: B&I',
+                    'Handel en ondernemerschap: H&O' => 'Handel en ondernemerschap: H&O',
+                    'Horeca en bakkerij: H&B' => 'Horeca en bakkerij: H&B',
+                    'ICT: ICT' => 'ICT: ICT',
+                    'Media en vormgeving: Me&V' => 'Media en vormgeving: Me&V',
+                    'Mobiliteit en voertuigen: Mo&V' => 'Mobiliteit en voertuigen: Mo&V',
+                    'Techniek en procesindustrie: T&P' => 'Techniek en procesindustrie: T&P',
+                    'Transport, scheepvaart en logistiek: TS&L' => 'Transport, scheepvaart en logistiek: TS&L',
+                    'Voedsel, natuur en leefomgeving: VN&L' => 'Voedsel, natuur en leefomgeving: VN&L',
+                    'Zorg en Welzijn: Z&W' => 'Zorg en Welzijn: Z&W',
+                    'Economie en administratie: E&A' => 'Economie en administratie: E&A',
+                    'Ambacht, laboratorium en gezondheidstechniek: AL&G' => 'Ambacht, laboratorium en gezondheidstechniek: AL&G',
+                ])
+                ->attribute('sectors')
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
