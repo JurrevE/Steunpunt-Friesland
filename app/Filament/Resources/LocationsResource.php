@@ -73,7 +73,7 @@ class LocationsResource extends Resource
                     ->label('Onder 15')
                     ->boolean()
                     ->alignment(Alignment::Center),
-                    Tables\Columns\TextColumn::make('sectors.sector_name')
+                Tables\Columns\TextColumn::make('sectors.sector_name')
                     ->searchable(isIndividual: true)
                     ->label('Sectoren')
                     ->badge()
@@ -83,28 +83,24 @@ class LocationsResource extends Resource
             ])
             ->filters([
                 TernaryFilter::make('under_15')
-                ->label('Geschikt voor onder de 15')
-                ->placeholder('Alles')
-                ->trueLabel('Geschikt')
-                ->falseLabel('Niet geschikt'),
-                SelectFilter::make('Sectoren')
-                ->multiple()
-                ->options([
-                    'Afbouw, hout en onderhoud: AH&O' => 'Afbouw, hout en onderhoud: AH&O',
-                    'Bouw en infra: B&I' => 'Bouw en infra: B&I',
-                    'Handel en ondernemerschap: H&O' => 'Handel en ondernemerschap: H&O',
-                    'Horeca en bakkerij: H&B' => 'Horeca en bakkerij: H&B',
-                    'ICT: ICT' => 'ICT: ICT',
-                    'Media en vormgeving: Me&V' => 'Media en vormgeving: Me&V',
-                    'Mobiliteit en voertuigen: Mo&V' => 'Mobiliteit en voertuigen: Mo&V',
-                    'Techniek en procesindustrie: T&P' => 'Techniek en procesindustrie: T&P',
-                    'Transport, scheepvaart en logistiek: TS&L' => 'Transport, scheepvaart en logistiek: TS&L',
-                    'Voedsel, natuur en leefomgeving: VN&L' => 'Voedsel, natuur en leefomgeving: VN&L',
-                    'Zorg en Welzijn: Z&W' => 'Zorg en Welzijn: Z&W',
-                    'Economie en administratie: E&A' => 'Economie en administratie: E&A',
-                    'Ambacht, laboratorium en gezondheidstechniek: AL&G' => 'Ambacht, laboratorium en gezondheidstechniek: AL&G',
-                ])
-                ->attribute('sectors')
+                    ->label('Geschikt voor onder de 15')
+                    ->placeholder('Alles')
+                    ->trueLabel('Geschikt')
+                    ->falseLabel('Niet geschikt'),
+                SelectFilter::make('sectors')
+                    ->multiple()
+                    ->options(self::getSectorOptions())
+                    ->attribute('sectors.sector_name')
+                    ->selectablePlaceholder(true)
+                    ->query(function ($query, array $data) {
+                        // Check if the data is not empty
+                        if (!empty(array_filter($data))) {
+                            $flatData = collect($data)->flatten()->all();
+                            $query->whereHas('sectors', function ($q) use ($flatData) {
+                                $q->whereIn('sector_name', $flatData);
+                            });
+                        }
+                    })
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -116,6 +112,19 @@ class LocationsResource extends Resource
                 ]),
             ]);
     }
+
+    /**
+     * Get sector options from the database.
+     *
+     * @return array
+     */
+    protected static function getSectorOptions(): array
+    {
+        $options = \App\Models\Sector::pluck('sector_name', 'sector_name')->toArray();
+        asort($options); // Sort the options alphabetically
+        return $options;
+    }
+
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
