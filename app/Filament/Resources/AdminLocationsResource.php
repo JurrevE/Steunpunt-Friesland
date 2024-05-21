@@ -98,17 +98,20 @@ class AdminLocationsResource extends Resource
                     ->placeholder('Alles')
                     ->trueLabel('Geschikt')
                     ->falseLabel('Niet geschikt'),
-                SelectFilter::make('sectors')
+                    SelectFilter::make('sectors')
                     ->multiple()
                     ->options(self::getSectorOptions())
                     ->attribute('sectors.sector_name')
                     ->selectablePlaceholder(true)
-                    ->query(function ($query, array $data) {
-                        // Check if the data is not empty
+                    ->query(function (Builder $query, array $data) {
                         if (!empty(array_filter($data))) {
                             $flatData = collect($data)->flatten()->all();
-                            $query->whereHas('sectors', function ($q) use ($flatData) {
-                                $q->whereIn('sector_name', $flatData);
+                            $query->whereHas('sectors', function (Builder $q) use ($flatData) {
+                                $q->where(function (Builder $q2) use ($flatData) {
+                                    foreach ($flatData as $sectorName) {
+                                        $q2->orWhere('sector_name', $sectorName);
+                                    }
+                                });
                             });
                         }
                     })
