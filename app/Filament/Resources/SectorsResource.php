@@ -12,6 +12,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\ViewAction;
+use app\Filament\Resources\SectorsResource\Pages\ViewSector;
 
 class SectorsResource extends Resource
 {
@@ -19,7 +22,7 @@ class SectorsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-pie';
     
-    protected static ?string $navigationGroup = 'Sectors';
+    protected static ?string $navigationGroup = 'Admin';
 
 
     public static function form(Form $form): Form
@@ -43,6 +46,7 @@ class SectorsResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -64,6 +68,7 @@ class SectorsResource extends Resource
             'index' => Pages\ListSectors::route('/'),
             'create' => Pages\CreateSectors::route('/create'),
             'edit' => Pages\EditSectors::route('/{record}/edit'),
+            'view' => Pages\ViewSector::route('/{record}')
         ];
     }
 }

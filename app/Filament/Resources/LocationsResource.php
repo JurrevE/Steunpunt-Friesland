@@ -26,6 +26,7 @@ use Filament\Infolists\Components\Section;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
+use Filament\Tables\Filters\SelectFilter;
 
 class LocationsResource extends Resource
 {
@@ -58,45 +59,70 @@ class LocationsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->sortable()
-                    ->searchable(isIndividual: true)
+                    ->searchable(isIndividual: true, isGlobal: false)
                     ->limit('24')
                     ->label('Naam'),
                 Tables\Columns\TextColumn::make('location')
                     ->icon('heroicon-s-map-pin')
                     ->sortable()
-                    ->searchable(isIndividual: true)
+                    ->searchable(isIndividual: true, isGlobal: false)
                     ->label('Locatie'),
                 // Checkbox
                 IconColumn::make('under_15')
                     ->label('Onder 15')
                     ->boolean()
                     ->alignment(Alignment::Center),
-                    Tables\Columns\TextColumn::make('sectors.sector_name')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('sectors.sector_name')
                     ->label('Sectoren')
                     ->badge()
                     ->limitList(2)
                     ->expandableLimitedList()
                     ->listWithLineBreaks()
             ])
+            ->searchOnBlur()          
             ->filters([
                 TernaryFilter::make('under_15')
-                ->label('Geschikt voor onder de 15')
-                ->placeholder('Alles')
-                ->trueLabel('Geschikt')
-                ->falseLabel('Niet geschikt')
-            ], layout: FiltersLayout::AboveContent)
+                    ->label('Geschikt voor onder de 15')
+                    ->placeholder('Alles')
+                    ->trueLabel('Geschikt')
+                    ->falseLabel('Niet geschikt'),
+                SelectFilter::make('sectors')
+                    ->multiple()
+                    ->options(self::getSectorOptions())
+                    ->attribute('sectors.sector_name')
+                    ->selectablePlaceholder(true)
+                    ->query(function ($query, array $data) {
+                        // Check if the data is not empty
+                        if (!empty(array_filter($data))) {
+                            $flatData = collect($data)->flatten()->all();
+                            $query->whereHas('sectors', function ($q) use ($flatData) {
+                                $q->whereIn('sector_name', $flatData);
+                            });
+                        }
+                    })
+            ], 
+            layout: FiltersLayout::AboveContent)
+            ->deferFilters()
+
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
+            
     }
+
+    /**
+     * Get sector options from the database.
+     *
+     * @return array
+     */
+    protected static function getSectorOptions(): array
+    {
+        $options = \App\Models\Sector::pluck('sector_name', 'sector_name')->toArray();
+        asort($options); // Sort the options alphabetically
+        return $options;
+    }
+
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
@@ -126,9 +152,19 @@ class LocationsResource extends Resource
                                     ->copyable()
                                     ->copyMessage('Copied!')
                                     ->copyMessageDuration(1500),
-                            ]),
+                                ]),
                     ])
-                    ->activeTab(1)                
+                    ->activeTab(1),
+                    
+                    Section::make('Sectoren')
+                        ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
+                        ->schema([
+                            TextEntry::make('sectors.sector_name')
+                            ->badge()    
+                            ->label('Sectoren'),
+                            TextEntry::make('expertise')
+                            ->label('Specialiteiten')
+                        ])              
             ])
             ->columns(1)
             ->inlineLabel();
@@ -147,6 +183,7 @@ class LocationsResource extends Resource
             'index' => Pages\ListLocations::route('/'),
             'create' => Pages\CreateLocations::route('/create'),
             'edit' => Pages\EditLocations::route('/{record}/edit'),
+            'view' => Pages\ViewLocation::route('/{record}'),        
         ];
     }
 
