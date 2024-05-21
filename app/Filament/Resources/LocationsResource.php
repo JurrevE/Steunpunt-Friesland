@@ -105,7 +105,6 @@ class LocationsResource extends Resource
             ->deferFilters()
 
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
             ]);
             
@@ -181,8 +180,6 @@ class LocationsResource extends Resource
     {
         return [
             'index' => Pages\ListLocations::route('/'),
-            'create' => Pages\CreateLocations::route('/create'),
-            'edit' => Pages\EditLocations::route('/{record}/edit'),
             'view' => Pages\ViewLocation::route('/{record}'),        
         ];
     }

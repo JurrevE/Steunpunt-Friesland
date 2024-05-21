@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\LocationsResource\Pages;
-use App\Filament\Resources\LocationsResource\RelationManagers;
-use App\Models\AdminLocations;
+use App\Filament\Resources\AdminLocationsResource\Pages;
+use App\Filament\Resources\AdminLocationsResource\RelationManagers;
+use App\Models\Locations;
 use Doctrine\DBAL\Schema\Schema;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Enums\FiltersLayout;
@@ -30,7 +30,7 @@ use Filament\Tables\Filters\SelectFilter;
 
 class AdminLocationsResource extends Resource
 {
-    protected static ?string $model = AdminLocations::class;
+    protected static ?string $model = Locations::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
     
@@ -180,15 +180,14 @@ class AdminLocationsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLocations::route('/'),
-            'create' => Pages\CreateLocations::route('/create'),
-            'edit' => Pages\EditLocations::route('/{record}/edit'),
-            'view' => Pages\ViewLocation::route('/{record}'),        
+            'index' => Pages\ListAdminLocations::route('/'),
+            'create' => Pages\CreateAdminLocations::route('/create'),
+            'edit' => Pages\EditAdminLocations::route('/{record}/edit'),
         ];
     }
 
     public static function getModel(): string
     {
-        return AdminLocations::class;
+        return Locations::class;
     }
 }
