@@ -43,6 +43,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Sectors',
+                'Admin'
                 //Add new navigation group here
             ])
             ->middleware([

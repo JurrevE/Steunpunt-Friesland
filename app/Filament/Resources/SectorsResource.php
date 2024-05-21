@@ -22,7 +22,7 @@ class SectorsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-pie';
     
-    protected static ?string $navigationGroup = 'Sectors';
+    protected static ?string $navigationGroup = 'Admin';
 
 
     public static function form(Form $form): Form

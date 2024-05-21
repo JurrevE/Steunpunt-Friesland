@@ -59,14 +59,13 @@ class LocationsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->sortable()
-                    ->searchable(isIndividual: true)
+                    ->searchable(isIndividual: true, isGlobal: false)
                     ->limit('24')
                     ->label('Naam'),
                 Tables\Columns\TextColumn::make('location')
                     ->icon('heroicon-s-map-pin')
                     ->sortable()
-                    ->searchable(isIndividual: true)
+                    ->searchable(isIndividual: true, isGlobal: false)
                     ->label('Locatie'),
                 // Checkbox
                 IconColumn::make('under_15')
@@ -74,13 +73,13 @@ class LocationsResource extends Resource
                     ->boolean()
                     ->alignment(Alignment::Center),
                 Tables\Columns\TextColumn::make('sectors.sector_name')
-                    ->searchable(isIndividual: true)
                     ->label('Sectoren')
                     ->badge()
                     ->limitList(2)
                     ->expandableLimitedList()
                     ->listWithLineBreaks()
             ])
+            ->searchOnBlur()          
             ->filters([
                 TernaryFilter::make('under_15')
                     ->label('Geschikt voor onder de 15')
@@ -101,16 +100,15 @@ class LocationsResource extends Resource
                             });
                         }
                     })
-            ], layout: FiltersLayout::AboveContent)
+            ], 
+            layout: FiltersLayout::AboveContent)
+            ->deferFilters()
+
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
+            
     }
 
     /**
