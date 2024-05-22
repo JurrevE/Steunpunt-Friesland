@@ -33,26 +33,37 @@ class LocationsResource extends Resource
     protected static ?string $model = Locations::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+
+    protected static ?string $navigationLabel = 'Locaties';
     
     protected static ?string $navigationGroup = 'View'; //Place the corresponding navigation group here
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->label('Name'),
-                Forms\Components\TextInput::make('location'),
-                Forms\Components\Checkbox::make('under_15')
-                    ->label('Under 15')
-                    ->helperText('Check if the location is suitable for ages under 15.'),
-                CheckboxList::make('sectors')
-                    ->relationship('sectors', 'sector_name')
-                    ->label('Sectoren')
-                    ->helpertext('selecteer de bijbehorende sectoren'),
-            ]);
-    }
+        ->schema([
+            Forms\Components\Grid::make(2)
+                ->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->label('Naam'),
+                    Forms\Components\TextInput::make('location')
+                    ->label('Locatie'),
+                    Forms\Components\TextInput::make('Website'),
+                    Forms\Components\TextInput::make('Contact'),
+                ]),
+            Forms\Components\Grid::make(2)
+                ->schema([
+                    Forms\Components\Checkbox::make('under_15')
+                        ->label('Onder 15')
+                        ->helperText('Check if the location is suitable for ages under 15.'),
+                    Forms\Components\CheckboxList::make('sectors')
+                        ->relationship('sectors', 'sector_name')
+                        ->label('Sectoren')
+                        ->helpertext('selecteer de bijbehorende sectoren'),
+                ]),
+        ]);
+}
 
     public static function table(Table $table): Table
     {
@@ -89,6 +100,7 @@ class LocationsResource extends Resource
                     ->trueLabel('Geschikt')
                     ->falseLabel('Niet geschikt'),
                     SelectFilter::make('sectors')
+                    ->label('Sectoren')
                     ->multiple()
                     ->options(self::getSectorOptions())
                     ->attribute('sectors.sector_name')

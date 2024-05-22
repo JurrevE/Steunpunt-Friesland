@@ -3,9 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AdminLocationsResource\Pages;
-use App\Filament\Resources\AdminLocationsResource\RelationManagers;
 use App\Models\Locations;
-use Doctrine\DBAL\Schema\Schema;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\TernaryFilter;
@@ -14,10 +12,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use FIlament\Tables\Colums\CheckboxColumn;
+use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Forms\Components\CheckboxList;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\IconEntry;
@@ -27,14 +24,17 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Forms\Components\Textarea;
 
 class AdminLocationsResource extends Resource
 {
     protected static ?string $model = Locations::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+
+    protected static ?string $navigationLabel = 'Edit Locaties';
     
-    protected static ?string $navigationGroup = 'Admin'; //Place the corresponding navigation group here
+    protected static ?string $navigationGroup = 'Admin';  //Place the corresponding navigation group here
 
     public static function getLabel(): string
     {
@@ -50,17 +50,33 @@ class AdminLocationsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->label('Name'),
-                Forms\Components\TextInput::make('location'),
-                Forms\Components\Checkbox::make('under_15')
-                    ->label('Under 15')
-                    ->helperText('Check if the location is suitable for ages under 15.'),
-                CheckboxList::make('sectors')
-                    ->relationship('sectors', 'sector_name')
-                    ->label('Sectoren')
-                    ->helpertext('selecteer de bijbehorende sectoren'),
+                Forms\Components\Grid::make(2)
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->label('Naam'),
+                        Forms\Components\TextInput::make('location')
+                        ->label('Locatie'),
+                        Forms\Components\TextInput::make('Website'),
+                        Forms\Components\TextInput::make('Contact'),
+                        Forms\Components\TextInput::make('spokesperson')
+                        ->label('Contactpersoon'),
+                    ]),
+                Forms\Components\Grid::make(2)
+                    ->schema([
+                        Forms\Components\Checkbox::make('under_15')
+                            ->label('Onder 15')
+                            ->helperText('Check if the location is suitable for ages under 15.'),
+                        Forms\Components\CheckboxList::make('sectors')
+                            ->relationship('sectors', 'sector_name')
+                            ->label('Sectoren')
+                            ->helpertext('selecteer de bijbehorende sectoren'),
+                    ]),
+                    Forms\Components\Grid::make(1)
+                     ->schema([
+                        Textarea::make('expertise')
+                        ->label('Specialiteit'),
+                     ])
             ]);
     }
 
@@ -77,7 +93,6 @@ class AdminLocationsResource extends Resource
                     ->sortable()
                     ->searchable(isIndividual: true, isGlobal: false)
                     ->label('Locatie'),
-                // Checkbox
                 IconColumn::make('under_15')
                     ->label('Onder 15')
                     ->boolean()
@@ -87,18 +102,18 @@ class AdminLocationsResource extends Resource
                     ->badge()
                     ->limitList(2)
                     ->expandableLimitedList()
-                    ->listWithLineBreaks()
+                    ->listWithLineBreaks(),
             ])
             ->persistSearchInSession()
             ->persistColumnSearchesInSession()
-            ->searchOnBlur()          
+            ->searchOnBlur()
             ->filters([
                 TernaryFilter::make('under_15')
                     ->label('Geschikt voor onder de 15')
                     ->placeholder('Alles')
                     ->trueLabel('Geschikt')
                     ->falseLabel('Niet geschikt'),
-                    SelectFilter::make('sectors')
+                SelectFilter::make('sectors')
                     ->multiple()
                     ->options(self::getSectorOptions())
                     ->attribute('sectors.sector_name')
@@ -114,7 +129,7 @@ class AdminLocationsResource extends Resource
                                 });
                             });
                         }
-                    })
+                    }),
             ], 
             layout: FiltersLayout::AboveContent)
             ->persistFiltersInSession()
@@ -130,11 +145,6 @@ class AdminLocationsResource extends Resource
             ]);
     }
 
-    /**
-     * Get sector options from the database.
-     *
-     * @return array
-     */
     protected static function getSectorOptions(): array
     {
         $options = \App\Models\Sector::pluck('sector_name', 'sector_name')->toArray();
@@ -171,19 +181,18 @@ class AdminLocationsResource extends Resource
                                     ->copyable()
                                     ->copyMessage('Copied!')
                                     ->copyMessageDuration(1500),
-                                ]),
+                            ]),
                     ])
                     ->activeTab(1),
-                    
-                    Section::make('Sectoren')
-                        ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
-                        ->schema([
-                            TextEntry::make('sectors.sector_name')
-                            ->badge()    
+                Section::make('Sectoren')
+                    ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
+                    ->schema([
+                        TextEntry::make('sectors.sector_name')
+                            ->badge()
                             ->label('Sectoren'),
-                            TextEntry::make('expertise')
-                            ->label('Specialiteiten')
-                        ])              
+                        TextEntry::make('expertise')
+                            ->label('Specialiteiten'),
+                    ]),
             ])
             ->columns(1)
             ->inlineLabel();
