@@ -144,8 +144,10 @@ class LocationsResource extends Resource
                         Tabs\Tab::make('Dashboard')
                             ->icon('heroicon-m-bars-3-center-left')
                             ->schema([
-                                TextEntry::make('name'),
+                                TextEntry::make('name')
+                                ->label('Naam'),
                                 IconEntry::make('under_15')
+                                    ->label('Geschikt voor onder 15')
                                     ->boolean(),
                                 TextEntry::make('website')
                                     ->icon('heroicon-m-globe-alt'),
@@ -155,11 +157,12 @@ class LocationsResource extends Resource
                             ->schema([
                                 TextEntry::make('location')
                                     ->icon('heroicon-s-map-pin')
-                                    ->label('Location'),
+                                    ->label('Locatie'),
                                 TextEntry::make('spokesperson')
-                                    ->label('Spokesperson')
+                                    ->label('Contactpersoon')
                                     ->icon('heroicon-m-user'),
                                 TextEntry::make('contact')
+                                    ->label('E-Mail')
                                     ->icon('heroicon-m-envelope')
                                     ->copyable()
                                     ->copyMessage('Copied!')
@@ -172,6 +175,7 @@ class LocationsResource extends Resource
                         ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
                         ->schema([
                             TextEntry::make('sectors.sector_name')
+                            ->listWithLineBreaks()
                             ->badge()    
                             ->label('Sectoren'),
                             TextEntry::make('expertise')

@@ -155,47 +155,52 @@ class AdminLocationsResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-            ->schema([
-                Tabs::make('Tabs')
-                    ->tabs([
-                        Tabs\Tab::make('Dashboard')
-                            ->icon('heroicon-m-bars-3-center-left')
-                            ->schema([
-                                TextEntry::make('name'),
-                                IconEntry::make('under_15')
-                                    ->boolean(),
-                                TextEntry::make('website')
-                                    ->icon('heroicon-m-globe-alt'),
+        ->schema([
+            Tabs::make('Tabs')
+                ->tabs([
+                    Tabs\Tab::make('Dashboard')
+                        ->icon('heroicon-m-bars-3-center-left')
+                        ->schema([
+                            TextEntry::make('name')
+                            ->label('Naam'),
+                            IconEntry::make('under_15')
+                                ->label('Geschikt voor onder 15')
+                                ->boolean(),
+                            TextEntry::make('website')
+                                ->icon('heroicon-m-globe-alt'),
+                        ]),
+                    Tabs\Tab::make('Contact')
+                        ->icon('heroicon-m-envelope')
+                        ->schema([
+                            TextEntry::make('location')
+                                ->icon('heroicon-s-map-pin')
+                                ->label('Locatie'),
+                            TextEntry::make('spokesperson')
+                                ->label('Contactpersoon')
+                                ->icon('heroicon-m-user'),
+                            TextEntry::make('contact')
+                                ->label('E-Mail')
+                                ->icon('heroicon-m-envelope')
+                                ->copyable()
+                                ->copyMessage('Copied!')
+                                ->copyMessageDuration(1500),
                             ]),
-                        Tabs\Tab::make('Contact')
-                            ->icon('heroicon-m-envelope')
-                            ->schema([
-                                TextEntry::make('location')
-                                    ->icon('heroicon-s-map-pin')
-                                    ->label('Location'),
-                                TextEntry::make('spokesperson')
-                                    ->label('Spokesperson')
-                                    ->icon('heroicon-m-user'),
-                                TextEntry::make('contact')
-                                    ->icon('heroicon-m-envelope')
-                                    ->copyable()
-                                    ->copyMessage('Copied!')
-                                    ->copyMessageDuration(1500),
-                            ]),
-                    ])
-                    ->activeTab(1),
+                ])
+                ->activeTab(1),
+                
                 Section::make('Sectoren')
                     ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
                     ->schema([
                         TextEntry::make('sectors.sector_name')
-                            ->badge()
-                            ->label('Sectoren'),
+                        ->listWithLineBreaks()
+                        ->badge()    
+                        ->label('Sectoren'),
                         TextEntry::make('expertise')
-                            ->label('Specialiteiten'),
-                    ]),
-            ])
-            ->columns(1)
-            ->inlineLabel();
+                        ->label('Specialiteiten')
+                    ])              
+        ])
+        ->columns(1)
+        ->inlineLabel();
     }
 
     public static function getRelations(): array
