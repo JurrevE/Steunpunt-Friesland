@@ -150,7 +150,16 @@ class LocationsResource extends Resource
                                     ->label('Geschikt voor onder 15')
                                     ->boolean(),
                                 TextEntry::make('website')
-                                    ->icon('heroicon-m-globe-alt'),
+                                    ->icon('heroicon-m-globe-alt')
+                                    ->url(function ($record) {
+                                        $url = $record->website;
+                                        // Prepend 'http://' if it doesn't already have a scheme
+                                        if (!preg_match('/^https?:\/\//', $url)) {
+                                            $url = 'http://' . $url;
+                                        }
+                                        return $url;
+                                    })
+                                    ->openUrlInNewTab(),
                             ]),
                         Tabs\Tab::make('Contact')
                             ->icon('heroicon-m-envelope')
@@ -164,6 +173,12 @@ class LocationsResource extends Resource
                                 TextEntry::make('contact')
                                     ->label('E-Mail')
                                     ->icon('heroicon-m-envelope')
+                                    ->copyable()
+                                    ->copyMessage('Copied!')
+                                    ->copyMessageDuration(1500),
+                                TextEntry::make('phone')
+                                    ->label('Telefoon')
+                                    ->icon('heroicon-m-phone')
                                     ->copyable()
                                     ->copyMessage('Copied!')
                                     ->copyMessageDuration(1500),

@@ -9,22 +9,24 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Section;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\CheckboxColumn;
-use Filament\Forms\Components\CheckboxList;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Infolist;
-use Filament\Infolists\Components\Section;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Forms\Components\Textarea;
 
 class AdminLocationsResource extends Resource
 {
@@ -50,33 +52,55 @@ class AdminLocationsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Grid::make(2)
+                // General Information Block
+                Section::make('Algemeen')
                     ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->label('Naam'),
-                        Forms\Components\TextInput::make('location')
-                        ->label('Locatie'),
-                        Forms\Components\TextInput::make('Website'),
-                        Forms\Components\TextInput::make('Contact'),
-                        Forms\Components\TextInput::make('spokesperson')
-                        ->label('Contactpersoon'),
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                TextInput::make('name')
+                                    ->required()
+                                    ->label('Naam'),
+                                TextInput::make('location')
+                                    ->label('Locatie'),
+                                TextInput::make('website')
+                                    ->label('Website'),
+                            ]),
                     ]),
-                Forms\Components\Grid::make(2)
+
+                // Contact Information Block
+                Section::make('Contact')
                     ->schema([
-                        Forms\Components\Checkbox::make('under_15')
-                            ->label('Onder 15')
-                            ->helperText('Check if the location is suitable for ages under 15.'),
-                        Forms\Components\CheckboxList::make('sectors')
-                            ->relationship('sectors', 'sector_name')
-                            ->label('Sectoren')
-                            ->helpertext('selecteer de bijbehorende sectoren'),
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                TextInput::make('contact')
+                                    ->label('E-mail'),
+                                TextInput::make('phone')
+                                    ->label('Telefoon'),
+                                TextInput::make('spokesperson')
+                                    ->label('Contactpersoon'),
+                            ]),
                     ]),
-                    Forms\Components\Grid::make(1)
-                     ->schema([
-                        Textarea::make('expertise')
-                        ->label('Specialiteit'),
-                     ])
+
+                // Extra Information Block
+                Section::make('Extra')
+                    ->schema([
+                        Forms\Components\Grid::make(1)
+                            ->schema([
+                                Forms\Components\Checkbox::make('under_15')
+                                    ->label('Onder 15')
+                                    ->helperText('Vink aan als de locatie  geschikt is voor kinderen onder de 15'),
+                                Forms\Components\CheckboxList::make('sectors')
+                                    ->relationship('sectors', 'sector_name')
+                                    ->label('Sectoren')
+                                    ->helperText('Selecteer de bijbehorende sectoren')
+                                    ->columnSpan(2)
+                                    ->extraAttributes([
+                                        'style' => 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;',
+                                    ]),
+                                Textarea::make('expertise')
+                                    ->label('Specialiteit'),
+                            ]),
+                    ]),
             ]);
     }
 
@@ -167,7 +191,22 @@ class AdminLocationsResource extends Resource
                                 ->label('Geschikt voor onder 15')
                                 ->boolean(),
                             TextEntry::make('website')
-                                ->icon('heroicon-m-globe-alt'),
+                                ->icon('heroicon-m-globe-alt')
+                                ->url(function ($record) {
+                                    $url = $record->website;
+                                    // Prepend 'http://' if it doesn't already have a scheme
+                                    if (!preg_match('/^https?:\/\//', $url)) {
+                                        $url = 'http://' . $url;
+                                    }
+                                    return $url;
+                                })
+                                ->openUrlInNewTab(),
+                            TextEntry::make('phone')
+                                ->label('Telefoon')
+                                ->icon('heroicon-m-phone')
+                                ->copyable()
+                                ->copyMessage('Copied!')
+                                ->copyMessageDuration(1500),
                         ]),
                     Tabs\Tab::make('Contact')
                         ->icon('heroicon-m-envelope')
