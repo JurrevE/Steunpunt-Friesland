@@ -1,0 +1,2 @@
+[27-May-2024 08:12:18 UTC] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in C:\Users\egber\Projects\Steunpunt-Friesland\Steunpunt-Friesland\storage\framework\views\c2c8b68c38976c8eb2e7fb6a37f7fbc3.php on line 1
+[27-May-2024 08:12:20 UTC] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in C:\Users\egber\Projects\Steunpunt-Friesland\Steunpunt-Friesland\vendor\symfony\process\Pipes\WindowsPipes.php on line 27

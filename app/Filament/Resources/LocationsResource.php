@@ -97,8 +97,8 @@ class LocationsResource extends Resource
                 TernaryFilter::make('under_15')
                     ->label('Geschikt voor onder de 15')
                     ->placeholder('Alles')
-                    ->trueLabel('Geschikt')
-                    ->falseLabel('Niet geschikt'),
+                    ->trueLabel('Onder 15')
+                    ->falseLabel('Niet onder 15'),
                     SelectFilter::make('sectors')
                     ->label('Sectoren')
                     ->multiple()
