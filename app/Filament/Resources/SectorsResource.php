@@ -24,6 +24,15 @@ class SectorsResource extends Resource
     
     protected static ?string $navigationGroup = 'Admin';
 
+    public static function getLabel(): string
+    {
+        return 'Sectoren';
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return 'Edit Sectoren';
+    }
 
     public static function form(Form $form): Form
     {

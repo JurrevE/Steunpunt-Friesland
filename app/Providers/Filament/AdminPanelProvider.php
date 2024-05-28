@@ -29,8 +29,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#0a6dbe',
             ])
+            ->brandLogo(asset('images/Steunpunt-Friesland_Logo.svg'))
+            ->brandLogoHeight('3.3rem')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -42,8 +44,10 @@ class AdminPanelProvider extends PanelProvider
                 //Widgets\FilamentInfoWidget::class,
             ])
             ->navigationGroups([
-                'Sectors',
-                'Admin'
+                NavigationGroup::make()
+                ->label('View'),
+                NavigationGroup::make()
+                ->label('Admin'),
                 //Add new navigation group here
             ])
             ->middleware([
