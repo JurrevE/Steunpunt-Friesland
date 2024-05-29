@@ -10,7 +10,8 @@
         "laravel/framework": "^11.3",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.4",
-        "livewire/volt": "^1.0"
+        "livewire/volt": "^1.0",
+        "pxlrbt/filament-excel": "^2.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

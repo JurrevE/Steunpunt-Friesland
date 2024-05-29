@@ -27,6 +27,8 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Filters\SelectFilter;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+ 
 
 class AdminLocationsResource extends Resource
 {
@@ -163,6 +165,7 @@ class AdminLocationsResource extends Resource
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
+                ExportBulkAction::make(),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
