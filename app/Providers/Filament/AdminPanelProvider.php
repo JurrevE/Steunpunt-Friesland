@@ -19,6 +19,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationGroup;
 
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -30,8 +31,8 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => '#0a6dbe',
-                'Ja' => '#FF0000',
-                'danger' => '#FF0000'
+                'danger' => Color::Red,
+                'success' => Color::Green
 
             ])
             ->brandLogo(asset('images/Steunpunt-Friesland_Logo.svg'))

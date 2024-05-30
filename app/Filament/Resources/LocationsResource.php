@@ -44,6 +44,7 @@ class LocationsResource extends Resource
 
     public static function form(Form $form): Form
     {
+
         return $form
         ->schema([
             Forms\Components\Grid::make(2)
