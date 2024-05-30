@@ -30,6 +30,9 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => '#0a6dbe',
+                'Ja' => '#FF0000',
+                'danger' => '#FF0000'
+
             ])
             ->brandLogo(asset('images/Steunpunt-Friesland_Logo.svg'))
             ->brandLogoHeight('3.3rem')
