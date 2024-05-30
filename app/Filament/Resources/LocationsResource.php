@@ -27,6 +27,10 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Support\Enums\MaxWidth;
+use app\enums\Status;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Support\Enums\FontWeight;
 
 class LocationsResource extends Resource
 {
@@ -74,14 +78,22 @@ class LocationsResource extends Resource
                     ->limit('24')
                     ->label('Naam'),
                 Tables\Columns\TextColumn::make('location')
-                    ->icon('heroicon-s-map-pin')
                     ->sortable()
                     ->searchable(isIndividual: true, isGlobal: false)
                     ->label('Locatie'),
                 // Checkbox
-                IconColumn::make('under_15')
+   
+                Tables\Columns\TextColumn::make('under_15')
                     ->label('Onder 15')
-                    ->boolean()
+                    ->badge()
+                    ->formatStateUsing(function ($state) {
+                        return $state ? 'Wel geschikt' : 'Niet geschikt';
+                    })
+                    ->color(function ($state) {
+                        return $state ? 'success' : 'danger';
+                    })
+                    ->weight(FontWeight::ExtraBold)
+                    ->size(TextColumn\TextColumnSize::Large)
                     ->alignment(Alignment::Center),
                 Tables\Columns\TextColumn::make('sectors.sector_name')
                     ->label('Sectoren')
@@ -97,8 +109,8 @@ class LocationsResource extends Resource
                 TernaryFilter::make('under_15')
                     ->label('Geschikt voor onder de 15')
                     ->placeholder('Alles')
-                    ->trueLabel('Onder 15')
-                    ->falseLabel('Niet onder 15'),
+                    ->trueLabel('Ja')
+                    ->falseLabel('Nee'),
                     SelectFilter::make('sectors')
                     ->label('Sectoren')
                     ->multiple()
@@ -112,11 +124,12 @@ class LocationsResource extends Resource
                                 $q->whereIn('sector_name', $flatData);
                             });
                         }
-                    })
+                    }),
             ], 
             layout: FiltersLayout::AboveContent)
             ->persistFiltersInSession()
             ->deferFilters()
+            ->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ]);
@@ -225,4 +238,18 @@ class LocationsResource extends Resource
     {
         return false;
     }
+
+     /** @return Forms\Components\Component[] */
+     public static function getDetailsFormSchema(): array
+     {
+         return [
+ 
+             Forms\Components\ToggleButtons::make('status')
+                 ->inline()
+                 ->options(Status::class)
+                 ->required(),
+         ];
+     }
+ 
 }
+
