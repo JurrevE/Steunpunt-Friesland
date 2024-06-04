@@ -23,8 +23,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\Grid;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Support\Enums\MaxWidth;
@@ -152,65 +152,60 @@ class LocationsResource extends Resource
     {
         return $infolist
             ->schema([
-                Tabs::make('Tabs')
-                    ->tabs([
-                        Tabs\Tab::make('Dashboard')
-                            ->icon('heroicon-m-bars-3-center-left')
-                            ->schema([
-                                TextEntry::make('name')
-                                ->label('Naam'),
-                                IconEntry::make('under_15')
-                                    ->label('Geschikt voor onder 15')
-                                    ->boolean(),
-                                TextEntry::make('website')
-                                    ->icon('heroicon-m-globe-alt')
-                                    ->url(function ($record) {
-                                        $url = $record->website;
-                                        // Prepend 'http://' if it doesn't already have a scheme
-                                        if (!preg_match('/^https?:\/\//', $url)) {
-                                            $url = 'http://' . $url;
-                                        }
-                                        return $url;
-                                    })
-                                    ->openUrlInNewTab(),
-                            ]),
-                        Tabs\Tab::make('Contact')
-                            ->icon('heroicon-m-envelope')
-                            ->schema([
-                                TextEntry::make('location')
-                                    ->icon('heroicon-s-map-pin')
-                                    ->label('Locatie'),
-                                TextEntry::make('spokesperson')
-                                    ->label('Contactpersoon')
-                                    ->icon('heroicon-m-user'),
-                                TextEntry::make('contact')
-                                    ->label('E-Mail')
-                                    ->icon('heroicon-m-envelope')
-                                    ->copyable()
-                                    ->copyMessage('Copied!')
-                                    ->copyMessageDuration(1500),
-                                TextEntry::make('phone')
-                                    ->label('Telefoon')
-                                    ->icon('heroicon-m-phone')
-                                    ->copyable()
-                                    ->copyMessage('Copied!')
-                                    ->copyMessageDuration(1500),
-                                ]),
+                Section::make('General Information')
+                    ->schema([
+                        TextEntry::make('name')
+                            ->label('Naam'),
+                        IconEntry::make('under_15')
+                            ->label('Geschikt voor onder 15')
+                            ->boolean(),
+                        TextEntry::make('website')
+                            ->icon('heroicon-m-globe-alt')
+                            ->url(function ($record) {
+                                $url = $record->website;
+                                // Prepend 'http://' if it doesn't already have a scheme
+                                if (!preg_match('/^https?:\/\//', $url)) {
+                                    $url = 'http://' . $url;
+                                }
+                                return $url;
+                            })
+                            ->openUrlInNewTab(),
                     ])
-                    ->activeTab(1),
-                    
-                    Section::make('Sectoren')
-                        ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
-                        ->schema([
-                            TextEntry::make('sectors.sector_name')
+                    ->columnSpan(['lg' => 2]),
+                Section::make('Contact Information')
+                    ->schema([
+                        TextEntry::make('location')
+                            ->icon('heroicon-s-map-pin')
+                            ->label('Locatie'),
+                        TextEntry::make('spokesperson')
+                            ->label('Contactpersoon')
+                            ->icon('heroicon-m-user'),
+                        TextEntry::make('contact')
+                            ->label('E-Mail')
+                            ->icon('heroicon-m-envelope')
+                            ->copyable()
+                            ->copyMessage('Copied!')
+                            ->copyMessageDuration(1500),
+                        TextEntry::make('phone')
+                            ->label('Telefoon')
+                            ->icon('heroicon-m-phone')
+                            ->copyable()
+                            ->copyMessage('Copied!')
+                            ->copyMessageDuration(1500),
+                    ])
+                    ->columnSpan(['lg' => 2]),
+                Section::make('Sectoren')
+                    ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
+                    ->schema([
+                        TextEntry::make('sectors.sector_name')
                             ->listWithLineBreaks()
-                            ->badge()    
+                            ->badge()
                             ->label('Sectoren'),
-                            TextEntry::make('expertise')
+                        TextEntry::make('expertise')
                             ->label('Specialiteiten')
-                        ])              
+                    ])
             ])
-            ->columns(1)
+            ->columns(4)
             ->inlineLabel();
     }
 
