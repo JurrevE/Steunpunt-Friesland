@@ -81,8 +81,6 @@ class LocationsResource extends Resource
                     ->sortable()
                     ->searchable(isIndividual: true, isGlobal: false)
                     ->label('Locatie'),
-                // Checkbox
-   
                 Tables\Columns\TextColumn::make('under_15')
                     ->label('Onder 15')
                     ->badge()
@@ -111,12 +109,13 @@ class LocationsResource extends Resource
                     ->placeholder('Alles')
                     ->trueLabel('Ja')
                     ->falseLabel('Nee'),
-                    SelectFilter::make('sectors')
+                SelectFilter::make('sectors')
                     ->label('Sectoren')
                     ->multiple()
                     ->options(self::getSectorOptions())
                     ->attribute('sectors.sector_name')
                     ->selectablePlaceholder(true)
+                    ->columnSpan(2)
                     ->query(function ($query, array $data) {
                         if (!empty(array_filter($data))) {
                             $flatData = collect($data)->flatten()->all();
@@ -128,8 +127,9 @@ class LocationsResource extends Resource
             ], 
             layout: FiltersLayout::AboveContent)
             ->persistFiltersInSession()
-            ->deferFilters()
-            ->filtersFormColumns(2)
+            // Add apply button, or auto apply filter(default)
+            // ->deferFilters() 
+            ->filtersFormColumns(4)
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ]);
@@ -170,6 +170,8 @@ class LocationsResource extends Resource
                                 return $url;
                             })
                             ->openUrlInNewTab(),
+                        TextEntry::make('notes')
+                            ->label('Beschrijving'),
                     ])
                     ->columnSpan(['lg' => 2]),
                 Section::make('Contact Information')
