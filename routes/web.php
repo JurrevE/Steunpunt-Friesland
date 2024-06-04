@@ -1,8 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Counter;
 
 Route::view('/', 'welcome');
+
+
+Route::get('/counter', Counter::class);
+
 
 Route::get('/', function () {
     return redirect('/admin');
