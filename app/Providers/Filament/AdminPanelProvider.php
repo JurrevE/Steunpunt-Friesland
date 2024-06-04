@@ -34,6 +34,7 @@ class AdminPanelProvider extends PanelProvider
                 'danger' => '#FF0000'
 
             ])
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->brandLogo(asset('images/Steunpunt-Friesland_Logo.svg'))
             ->brandLogoHeight('3.3rem')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
