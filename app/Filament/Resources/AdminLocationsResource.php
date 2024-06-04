@@ -28,7 +28,10 @@ use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Filters\SelectFilter;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
- 
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Filament\Actions\ExportLocationsAction;
 
 class AdminLocationsResource extends Resource
 {
@@ -38,7 +41,7 @@ class AdminLocationsResource extends Resource
 
     protected static ?string $navigationLabel = 'Edit Locaties';
     
-    protected static ?string $navigationGroup = 'Admin';  //Place the corresponding navigation group here
+    protected static ?string $navigationGroup = 'Admin';
 
     public static function getLabel(): string
     {
@@ -66,6 +69,9 @@ class AdminLocationsResource extends Resource
                                     ->label('Locatie'),
                                 TextInput::make('website')
                                     ->label('Website'),
+                                Textarea::make('notes')
+                                    ->label('Beschrijving')
+                                    ->columnSpan(2),
                             ]),
                     ]),
 
@@ -100,7 +106,7 @@ class AdminLocationsResource extends Resource
                                         'style' => 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;',
                                     ]),
                                 Textarea::make('expertise')
-                                    ->label('Specialiteit'),
+                                    ->label('Specialiteit(en)'),
                             ]),
                     ]),
             ]);
@@ -144,6 +150,7 @@ class AdminLocationsResource extends Resource
                     ->options(self::getSectorOptions())
                     ->attribute('sectors.sector_name')
                     ->selectablePlaceholder(true)
+                    ->columnSpan(3)
                     ->query(function (Builder $query, array $data) {
                         if (!empty(array_filter($data))) {
                             $flatData = collect($data)->flatten()->all();
@@ -159,13 +166,14 @@ class AdminLocationsResource extends Resource
             ], 
             layout: FiltersLayout::AboveContent)
             ->persistFiltersInSession()
-            ->deferFilters()
+            ->headerActions([
+                ExportLocationsAction::make('export_all'), // Use the custom action with a unique name
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                ExportBulkAction::make(),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
@@ -182,67 +190,62 @@ class AdminLocationsResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-        ->schema([
-            Tabs::make('Tabs')
-                ->tabs([
-                    Tabs\Tab::make('Dashboard')
-                        ->icon('heroicon-m-bars-3-center-left')
-                        ->schema([
-                            TextEntry::make('name')
+            ->schema([
+                Section::make('General Information')
+                    ->schema([
+                        TextEntry::make('name')
                             ->label('Naam'),
-                            IconEntry::make('under_15')
-                                ->label('Geschikt voor onder 15')
-                                ->boolean(),
-                            TextEntry::make('website')
-                                ->icon('heroicon-m-globe-alt')
-                                ->url(function ($record) {
-                                    $url = $record->website;
-                                    // Prepend 'http://' if it doesn't already have a scheme
-                                    if (!preg_match('/^https?:\/\//', $url)) {
-                                        $url = 'http://' . $url;
-                                    }
-                                    return $url;
-                                })
-                                ->openUrlInNewTab(),
-                            TextEntry::make('phone')
-                                ->label('Telefoon')
-                                ->icon('heroicon-m-phone')
-                                ->copyable()
-                                ->copyMessage('Copied!')
-                                ->copyMessageDuration(1500),
-                        ]),
-                    Tabs\Tab::make('Contact')
-                        ->icon('heroicon-m-envelope')
-                        ->schema([
-                            TextEntry::make('location')
-                                ->icon('heroicon-s-map-pin')
-                                ->label('Locatie'),
-                            TextEntry::make('spokesperson')
-                                ->label('Contactpersoon')
-                                ->icon('heroicon-m-user'),
-                            TextEntry::make('contact')
-                                ->label('E-Mail')
-                                ->icon('heroicon-m-envelope')
-                                ->copyable()
-                                ->copyMessage('Copied!')
-                                ->copyMessageDuration(1500),
-                            ]),
-                ])
-                ->activeTab(1),
-                
+                        IconEntry::make('under_15')
+                            ->label('Geschikt voor onder 15')
+                            ->boolean(),
+                        TextEntry::make('website')
+                            ->icon('heroicon-m-globe-alt')
+                            ->url(function ($record) {
+                                $url = $record->website;
+                                // Prepend 'http://' if it doesn't already have a scheme
+                                if (!preg_match('/^https?:\/\//', $url)) {
+                                    $url = 'http://' . $url;
+                                }
+                                return $url;
+                            })
+                            ->openUrlInNewTab(),
+                    ])
+                    ->columnSpan(['lg' => 2]),
+                Section::make('Contact Information')
+                    ->schema([
+                        TextEntry::make('location')
+                            ->icon('heroicon-s-map-pin')
+                            ->label('Locatie'),
+                        TextEntry::make('spokesperson')
+                            ->label('Contactpersoon')
+                            ->icon('heroicon-m-user'),
+                        TextEntry::make('contact')
+                            ->label('E-Mail')
+                            ->icon('heroicon-m-envelope')
+                            ->copyable()
+                            ->copyMessage('Copied!')
+                            ->copyMessageDuration(1500),
+                        TextEntry::make('phone')
+                            ->label('Telefoon')
+                            ->icon('heroicon-m-phone')
+                            ->copyable()
+                            ->copyMessage('Copied!')
+                            ->copyMessageDuration(1500),
+                    ])
+                    ->columnSpan(['lg' => 2]),
                 Section::make('Sectoren')
                     ->description('Alle sectoren die bij deze locatie horen en de specialiteiten')
                     ->schema([
                         TextEntry::make('sectors.sector_name')
-                        ->listWithLineBreaks()
-                        ->badge()    
-                        ->label('Sectoren'),
+                            ->listWithLineBreaks()
+                            ->badge()
+                            ->label('Sectoren'),
                         TextEntry::make('expertise')
-                        ->label('Specialiteiten')
-                    ])              
-        ])
-        ->columns(1)
-        ->inlineLabel();
+                            ->label('Specialiteiten')
+                    ])
+            ])
+            ->columns(4)
+            ->inlineLabel();
     }
 
     public static function getRelations(): array
