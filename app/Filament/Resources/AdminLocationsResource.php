@@ -28,10 +28,11 @@ use Filament\Infolists\Components\Tabs;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Filters\SelectFilter;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Filament\Actions\ExportLocationsAction;
+use App\Exports\SelectedLocationsExport;
+use Illuminate\Support\Collection;
 
 class AdminLocationsResource extends Resource
 {
@@ -167,13 +168,19 @@ class AdminLocationsResource extends Resource
             layout: FiltersLayout::AboveContent)
             ->persistFiltersInSession()
             ->headerActions([
-                ExportLocationsAction::make('export_all'), // Use the custom action with a unique name
+                ExportLocationsAction::make('export_all'), 
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
+                ExportBulkAction::make()
+                    ->label('Export All Data')
+                    ->action(function ($records) {
+                        $locationIds = $records->pluck('id')->toArray();
+                        return Excel::download(new SelectedLocationsExport($locationIds), 'locations.xlsx');
+                    }),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
