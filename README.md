@@ -1,14 +1,77 @@
 ## Before usage run these lines in the terminal:
-1. php artisan filament:install --panels
-2. php artisan migrate
-3. php artisan make:filament-user
-    - email: admin@steunpunt-friesland.nl
+1. php artisan serve
+2. Hopefully it works
+3. Go to (http://127.0.0.1:8000/admin/login)
+4. Login using the credentials:
+    - email: admin@admin.nl
     - password: admin
-4. php artisan serve
-5. Go to (http://127.0.0.1:8000/admin/login)
-6. Login using the credentials:
-    - email: admin@steunpunt-friesland.nl
-    - password: admin
+
+# Steunpunt Friesland Filter tool
+Writen by: Egbert Ludema
+Build by: Iwan Bijl, Jurre van Eijk, Egbert Ludema
+Designed by: Yaron Piest, Amber Kroes
+
+## Introduction
+For our school project, we were given the task by Steunpunt Friesland to find a solution for their problem.
+
+### Problem:
+Steunpunt Friesland needs to find care/shelter locations daily for children who struggle in regular education. Currently, there are more than 200 locations in Friesland and Steunpunt Friesland mainly works with an Excel file and a map with pin points.
+
+### Wishes
+- An application that does not require an IT professional
+- Export all locations to a excel sheet
+
+### Solution:
+The solution quickly became clear. An advanced filtering system was needed. It was initially unclear if a map was required or not. After several test sessions, it quickly became clear that a map was not necessary.
+
+Ultimately, we set up a filtering system and are currently working on adding one more filter to complete it.
+
+Current filters:
+- Under 15
+    - Yes
+    - No
+    - All
+- Sectors
+    - Able to select multiple sectors
+    - Shows all items containing one or more selected sectors
+- Name
+    - Search
+    - Sort
+- Location
+    - Search
+    - Sort
+
+The filter we want to add, and are currently working on:
+- Radius for location
+    - Currently, when you filter by location, it leaves out all other locations surrounding the selected location. Also, some children in need of help live in villages without any locations. Therefore, the radius filter is a must-have.
+
+### Application
+Currently we have a login screen, 2 users and 4 screen.
+
+For this project we used the <a href="https://tallstack.dev/" target="_blank">TALL</a>(Tailwind css, Angular, Laravel, Livewire) stack. On top of the stack we added the <a href="https://filamentphp.com" target="_blank">Filament package</a>. On top of all that we used the <a href="https://filamentphp.com/plugins/pxlrbt-excel" target="_blank">Excel export</a> function from <a href="https://github.com/pxlrbt" target="_blank">Dennis Koch</a>
+
+#### Login screen
+This is the default login screen of Filament with minor changes like a logo and color changes.
+
+#### Users
+- Admin
+    - This user has the role "Admin" in the database and has acces to all panels.
+- Viewer
+    - THis user has the role "Viewer" in the database and has acces to the dashboard and locations panels.
+
+### Panels
+#### Dashboard
+The dashboard shows some statistics and has a logout button
+
+#### Locations
+The locations screen is the main screen for this application. This is the screen used for searching a locations, making use out of the filters described earlier.
+
+#### Edit locations
+This screen is for admins only. On this screen you have the same filter function, but you can now edit, add or remove locations.
+On this screen the admin(s) are able to export all locations at once, or select as many locations as they want, and export all selected locations to a Excel sheet.
+
+#### Edit sectors
+Each location has their own sectors(or no sectors). The edit sectors screen is also for admins only. On this screen admins are able to edit, add or remove sectors.
 
 <hr>
 
