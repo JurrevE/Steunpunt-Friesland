@@ -120,6 +120,7 @@ class AdminLocationsResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(isIndividual: true, isGlobal: false)
                     ->limit('24')
+                    ->sortable()
                     ->label('Naam'),
                 Tables\Columns\TextColumn::make('location')
                     ->icon('heroicon-s-map-pin')

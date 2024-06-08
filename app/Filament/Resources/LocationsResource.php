@@ -76,6 +76,7 @@ class LocationsResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(isIndividual: true, isGlobal: false)
                     ->limit('24')
+                    ->sortable()
                     ->label('Naam'),
                 Tables\Columns\TextColumn::make('location')
                     ->sortable()
