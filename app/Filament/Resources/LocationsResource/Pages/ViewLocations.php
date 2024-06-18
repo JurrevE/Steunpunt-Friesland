@@ -2,16 +2,16 @@
 
 namespace App\Filament\Resources\LocationsResource\Pages;
 
-use App\Models\Location;
 use App\Filament\Resources\LocationsResource;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Contracts\Support\Htmlable;
+use Filament\Resources\Actions\Button;
 
 class ViewLocation extends ViewRecord
 {
     protected static string $resource = LocationsResource::class;
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string
     {
         $record = $this->getRecord();
 
@@ -26,6 +26,11 @@ class ViewLocation extends ViewRecord
 
     protected function getActions(): array
     {
-        return [];
+        $record = $this->getRecord();
+        
+        return [
+            Action::make('View on Map')
+                ->url(route('filament.resources.locations-resource.pages.maps-overview', ['record' => $record->getKey()]))                 
+        ];
     }
 }
