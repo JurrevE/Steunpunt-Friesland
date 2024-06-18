@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Filament\Resources\LocationsResource;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
+use Filament\Actions;
 
 class ViewLocation extends ViewRecord
 {
@@ -26,6 +27,10 @@ class ViewLocation extends ViewRecord
 
     protected function getActions(): array
     {
-        return [];
+        $record = $this->getRecord();
+        return [
+            Actions\Action::make('view on map')
+            ->url(route('filament.resources.locations-resource.pages.maps-overview', ['record' => $record->getKey()]))                 
+         ];
     }
 }
