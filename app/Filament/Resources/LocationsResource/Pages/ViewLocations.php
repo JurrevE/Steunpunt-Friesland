@@ -7,7 +7,7 @@ use App\Filament\Resources\LocationsResource;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 
-class ViewLocation extends ViewRecord
+class ViewLocations extends ViewRecord
 {
     protected static string $resource = LocationsResource::class;
 
