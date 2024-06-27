@@ -1,5 +1,5 @@
 // Initialize the map
-var map = L.map('map').setView([51.505, -0.09], 13);
+const map = L.map('map').setView([53.1653, 5.7815], 9);
 
 // Add OpenStreetMap tiles
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -8,13 +8,12 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Sample markers
 var markers = [
-    L.marker([51.505, -0.09]).addTo(map),
-    L.marker([51.515, -0.1]).addTo(map),
-    L.marker([51.495, -0.08]).addTo(map)
+    L.marker([53.1653, 5.7815]).addTo(map)
+
 ];
 
 // Circle to represent the radius
-var circle = L.circle([51.505, -0.09], {
+var circle = L.circle([53.1653, 5.7815], {
     color: 'red',
     fillColor: '#f03',
     fillOpacity: 0.5,
@@ -53,7 +52,7 @@ function geocodeAddress() {
                 var lon = data[0].lon;
                 var location = new L.LatLng(lat, lon);
 
-                map.setView(location, 13);
+                map.setView(location, 11);
                 circle.setLatLng(location);
                 updateRadius();
             } else {
