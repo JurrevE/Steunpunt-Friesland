@@ -223,7 +223,7 @@ class LocationsResource extends Resource
     {
         return [
             'index' => Pages\ListLocations::route('/'),
-            'view' => Pages\ViewLocation::route('/{record}'),        
+            'view' => Pages\ViewLocations::route('/{record}'),        
         ];
     }
 
